@@ -819,7 +819,7 @@ describe('Chain', function() {
   }));
 
 /*
-  note: halvening is too much.
+  // note: halvening is too much.
   it('should fail to connect too many sigops', co(function* () {
     var start = chain.height - 110;
     var end = chain.height - 100;
