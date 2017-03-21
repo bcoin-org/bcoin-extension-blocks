@@ -9,7 +9,7 @@ var Block = require('../lib/primitives/block');
 var Script = require('../lib/script/script');
 var Opcode = require('../lib/script/opcode');
 var opcodes = Script.opcodes;
-var main, testnet, regtest, segnet3, segnet4, btcd;
+var main, testnet, regtest, segnet3, segnet4, btcd, extnet;
 
 function createGenesisBlock(options) {
   var flags = options.flags;
@@ -114,6 +114,13 @@ btcd = createGenesisBlock({
   nonce: 2
 });
 
+extnet = createGenesisBlock({
+  version: 1,
+  ts: 1490103661,
+  bits: 505413631,
+  nonce: 8
+});
+
 util.log(main);
 util.log('');
 util.log(testnet);
@@ -142,3 +149,7 @@ util.log('segnet4 raw: %s', segnet4.toRaw().toString('hex'));
 util.log('');
 util.log('btcd simnet hash: %s', btcd.rhash());
 util.log('btcd simnet raw: %s', btcd.toRaw().toString('hex'));
+util.log('');
+util.log('extnet rhash: %s', extnet.rhash());
+util.log('extnet hash: %s', extnet.hash('hex'));
+util.log('extnet raw: %s', extnet.toRaw().toString('hex'));
