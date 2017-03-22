@@ -506,7 +506,7 @@ describe('Node', function() {
         coinbaseaux: { flags: '6d696e65642062792062636f696e' },
         coinbasevalue: 1250000000,
         coinbasetxn: undefined,
-        default_extension_commitment:
+        default_witness_commitment:
           '6a24aa21a9ef0000000000000000000000000000000000000000000000000000000000000000',
         transactions: [],
         extension: []
