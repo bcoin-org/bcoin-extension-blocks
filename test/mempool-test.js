@@ -342,7 +342,7 @@ describe('Mempool', function() {
     tx = tx.toTX();
 
     assert(mempool.hasReject(cached.hash()));
-    yield mempool.addBlock({ height: 1 }, [tx]);
+    yield mempool.addBlock({ height: 1 }, [tx], []);
     assert(!mempool.hasReject(cached.hash()));
   }));
 

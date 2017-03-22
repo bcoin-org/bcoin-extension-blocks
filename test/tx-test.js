@@ -228,8 +228,6 @@ describe('TX', function() {
       assert.equal(wtx.tx.witnessHash('hex'),
         '088c919cd8408005f255c411f786928385688a9e8fdb2db4c9bc3578ce8c94cf');
       assert.equal(wtx.tx.getSize(), 62138);
-      assert.equal(wtx.tx.getVirtualSize(), 61813);
-      assert.equal(wtx.tx.getWeight(), 247250);
 
       raw1 = wtx.tx.toRaw();
       clearCache(wtx.tx, true);

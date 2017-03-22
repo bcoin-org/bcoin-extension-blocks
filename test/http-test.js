@@ -202,7 +202,8 @@ describe('HTTP', function() {
       submitold: false,
       coinbaseaux: { flags: '6d696e65642062792062636f696e' },
       coinbasevalue: 5000000000,
-      transactions: []
+      transactions: [],
+      extension: []
     });
   }));
 
