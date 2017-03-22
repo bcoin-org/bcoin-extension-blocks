@@ -220,17 +220,27 @@ MemWallet.prototype.syncKey = function syncKey(path) {
   }
 };
 
-MemWallet.prototype.addBlock = function addBlock(entry, txs) {
+MemWallet.prototype.addBlock = function addBlock(entry, txs, ext) {
   var i, tx;
 
   for (i = 0; i < txs.length; i++) {
     tx = txs[i];
     this.addTX(tx, entry.height);
   }
+
+  for (i = 0; i < ext.length; i++) {
+    tx = ext[i];
+    this.addTX(tx, entry.height);
+  }
 };
 
-MemWallet.prototype.removeBlock = function removeBlock(entry, txs) {
+MemWallet.prototype.removeBlock = function removeBlock(entry, txs, ext) {
   var i, tx;
+
+  for (i = ext.length - 1; i >= 0; i--) {
+    tx = ext[i];
+    this.removeTX(tx, entry.height);
+  }
 
   for (i = txs.length - 1; i >= 0; i--) {
     tx = txs[i];
