@@ -76,11 +76,11 @@ describe('Chain', function() {
   });
 
   chain.on('connect', function(entry, block) {
-    wallet.addBlock(entry, block.txs);
+    wallet.addBlock(entry, block.txs, block.ext);
   });
 
   chain.on('disconnect', function(entry, block) {
-    wallet.removeBlock(entry, block.txs);
+    wallet.removeBlock(entry, block.txs, block.ext);
   });
 
   it('should open chain and miner', co(function* () {
