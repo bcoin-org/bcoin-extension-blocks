@@ -251,6 +251,7 @@ MemWallet.prototype.removeBlock = function removeBlock(entry, txs, ext) {
 MemWallet.prototype.addTX = function addTX(tx, height) {
   var hash = tx.hash('hex');
   var result = false;
+  var witness = tx.hasWitness();
   var i, op, path, addr, coin, input, output;
 
   if (height == null)
@@ -259,17 +260,19 @@ MemWallet.prototype.addTX = function addTX(tx, height) {
   if (this.map[hash])
     return true;
 
-  for (i = 0; i < tx.inputs.length; i++) {
-    input = tx.inputs[i];
-    op = input.prevout.toKey();
-    coin = this.getCoin(op);
+  if (!tx.isCoinbase() && !tx.isResolution()) {
+    for (i = 0; i < tx.inputs.length; i++) {
+      input = tx.inputs[i];
+      op = input.prevout.toKey();
+      coin = this.getCoin(op);
 
-    if (!coin)
-      continue;
+      if (!coin)
+        continue;
 
-    result = true;
+      result = true;
 
-    this.removeCoin(op);
+      this.removeCoin(op);
+    }
   }
 
   for (i = 0; i < tx.outputs.length; i++) {
@@ -282,6 +285,9 @@ MemWallet.prototype.addTX = function addTX(tx, height) {
     path = this.getPath(addr);
 
     if (!path)
+      continue;
+
+    if (witness && !output.script.isProgram())
       continue;
 
     result = true;
@@ -302,6 +308,7 @@ MemWallet.prototype.addTX = function addTX(tx, height) {
 MemWallet.prototype.removeTX = function removeTX(tx, height) {
   var hash = tx.hash('hex');
   var result = false;
+  var witness = tx.hasWitness();
   var i, op, coin, input, output;
 
   if (!this.map[hash])
@@ -313,6 +320,9 @@ MemWallet.prototype.removeTX = function removeTX(tx, height) {
     coin = this.getCoin(op);
 
     if (!coin)
+      continue;
+
+    if (witness && !output.script.isProgram())
       continue;
 
     result = true;
