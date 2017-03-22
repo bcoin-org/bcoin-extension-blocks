@@ -212,7 +212,7 @@ describe('Block', function() {
     assert(block.txs[0].isCoinbase());
     assert(block.txs[0].isSane());
     assert(!block.hasWitness());
-    assert.equal(block.getSize(), 284232);
+    assert.equal(block.getSize(), 284231);
 
     flags = Script.flags.VERIFY_P2SH | Script.flags.VERIFY_DERSIG;
 
@@ -327,7 +327,7 @@ describe('Block', function() {
 
     assert.equal(
       cblock1.toBlock().toNormal().toString('hex'),
-      block.toRaw().toString('hex') + '00');
+      block.toRaw().toString('hex'));
   });
 
   it('should handle half-full compact block', function() {
@@ -384,7 +384,7 @@ describe('Block', function() {
 
     assert.equal(
       cblock1.toBlock().toNormal().toString('hex'),
-      block.toRaw().toString('hex') + '00');
+      block.toRaw().toString('hex'));
   });
 
   it('should count sigops for block 928828 (testnet)', function() {
