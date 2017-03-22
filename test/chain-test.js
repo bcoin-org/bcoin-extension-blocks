@@ -379,7 +379,7 @@ describe('Chain', function() {
   it('should have activated segwit', co(function* () {
     var deployments = network.deployments;
     var prev = yield chain.tip.getPrevious();
-    var state = yield chain.getState(prev, deployments.segwit);
+    var state = yield chain.getState(prev, deployments.extblk);
     assert.equal(state, 3);
   }));
 
