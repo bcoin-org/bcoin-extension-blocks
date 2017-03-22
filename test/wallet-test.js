@@ -105,7 +105,7 @@ describe('Wallet', function() {
       w2.account.accountKey.toBase58());
   }));
 
-  testP2PKH = co(function* testP2PKH(witness, bullshitNesting) {
+  testP2PKH = co(function* testP2PKH(witness) {
     var flags = Script.flags.STANDARD_VERIFY_FLAGS;
     var w, addr, src, tx;
 
@@ -120,7 +120,7 @@ describe('Wallet', function() {
 
     src = new MTX();
     src.addInput(dummy());
-    src.addOutput(bullshitNesting ? w.getNested() : w.getAddress(), 5460 * 2);
+    src.addOutput(w.getAddress(), 5460 * 2);
     src.addOutput(new Address(), 2 * 5460);
     src = src.toTX();
 
@@ -525,10 +525,7 @@ describe('Wallet', function() {
 
     assert.equal(t2.getFee(view), 5250);
 
-    assert.equal(t2.getWeight(), 2084);
-    assert.equal(t2.getBaseSize(), 521);
     assert.equal(t2.getSize(), 521);
-    assert.equal(t2.getVirtualSize(), 521);
 
     w2.once('balance', function(b) {
       balance = b;
@@ -618,10 +615,10 @@ describe('Wallet', function() {
     assert.equal(tx.verify(), true);
   }));
 
-  testMultisig = co(function* testMultisig(witness, bullshitNesting, cb) {
+  testMultisig = co(function* testMultisig(witness, cb) {
     var flags = Script.flags.STANDARD_VERIFY_FLAGS;
-    var rec = bullshitNesting ? 'nested' : 'receive';
-    var depth = bullshitNesting ? 'nestedDepth' : 'receiveDepth';
+    var rec = 'receive';
+    var depth = 'receiveDepth';
     var options, w1, w2, w3, receive, b58;
     var addr, paddr, utx, send, change;
     var view, block;
@@ -651,10 +648,7 @@ describe('Wallet', function() {
     addr = Address.fromBase58(b58);
 
     if (witness) {
-      if (bullshitNesting)
-        assert.equal(addr.type, scriptTypes.SCRIPTHASH);
-      else
-        assert.equal(addr.type, scriptTypes.WITNESSSCRIPTHASH);
+      assert.equal(addr.type, scriptTypes.WITNESSSCRIPTHASH);
     } else {
       assert.equal(addr.type, scriptTypes.SCRIPTHASH);
     }
@@ -675,7 +669,7 @@ describe('Wallet', function() {
     // Add a shared unspent transaction to our wallets
     utx = new MTX();
     utx.addInput(dummy());
-    utx.addOutput(bullshitNesting ? paddr : addr, 5460 * 10);
+    utx.addOutput(addr, 5460 * 10);
     utx = utx.toTX();
 
     // Simulate a confirmation
@@ -683,7 +677,7 @@ describe('Wallet', function() {
 
     assert.equal(w1.account[depth], 1);
 
-    yield walletdb.addBlock(block, [utx]);
+    yield walletdb.addBlock(block, [utx], []);
 
     assert.equal(w1.account[depth], 2);
 
@@ -721,7 +715,7 @@ describe('Wallet', function() {
     // Simulate a confirmation
     block = nextBlock();
 
-    yield walletdb.addBlock(block, [send]);
+    yield walletdb.addBlock(block, [send], []);
 
     assert.equal(w1.account[depth], 2);
     assert.equal(w1.account.changeDepth, 2);
@@ -1022,7 +1016,7 @@ describe('Wallet', function() {
 
     block = nextBlock();
 
-    yield walletdb.addBlock(block, [t2]);
+    yield walletdb.addBlock(block, [t2], []);
 
     coins = yield w1.getSmartCoins();
     assert.equal(coins.length, 4);

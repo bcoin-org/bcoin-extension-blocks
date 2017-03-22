@@ -500,14 +500,16 @@ describe('Node', function() {
         expires: json.result.expires,
         sigoplimit: 80000,
         sizelimit: 4000000,
-        weightlimit: 4000000,
+        extensionlimit: 1000000,
         longpollid: node.chain.tip.rhash() + '0000000000',
         submitold: false,
         coinbaseaux: { flags: '6d696e65642062792062636f696e' },
         coinbasevalue: 1250000000,
         coinbasetxn: undefined,
-        default_witness_commitment: '6a24aa21a9ede2f61c3f71d1defd3fa999dfa36953755c690689799962b48bebd836974e8cf9',
-        transactions: []
+        default_extension_commitment:
+          '6a24aa21a9ef0000000000000000000000000000000000000000000000000000000000000000',
+        transactions: [],
+        extension: []
       },
       error: null,
       id: '1'
@@ -651,9 +653,8 @@ describe('Node', function() {
 
     assert.equal(result.transactions.length, 2);
     assert.equal(fees, tx1.getFee() + tx2.getFee());
-    assert.equal(weight, tx1.getWeight() + tx2.getWeight());
-    assert.equal(result.transactions[0].hash, tx1.txid());
-    assert.equal(result.transactions[1].hash, tx2.txid());
+    assert.equal(result.transactions[0].txid, tx1.txid());
+    assert.equal(result.transactions[1].txid, tx2.txid());
     assert.equal(result.coinbasevalue, 125e7 + fees);
   }));
 
@@ -686,7 +687,6 @@ describe('Node', function() {
 
   it('should get a block template', co(function* () {
     var fees = 0;
-    var weight = 0;
     var i, item, json, result;
 
     node.rpc.refreshBlock();
@@ -707,14 +707,12 @@ describe('Node', function() {
     for (i = 0; i < result.transactions.length; i++) {
       item = result.transactions[i];
       fees += item.fee;
-      weight += item.weight;
     }
 
     assert.equal(result.transactions.length, 2);
     assert.equal(fees, tx1.getFee() + tx2.getFee());
-    assert.equal(weight, tx1.getWeight() + tx2.getWeight());
-    assert.equal(result.transactions[0].hash, tx2.txid());
-    assert.equal(result.transactions[1].hash, tx1.txid());
+    assert.equal(result.transactions[0].txid, tx2.txid());
+    assert.equal(result.transactions[1].txid, tx1.txid());
     assert.equal(result.coinbasevalue, 125e7 + fees);
   }));
 
