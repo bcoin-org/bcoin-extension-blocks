@@ -657,15 +657,6 @@ describe('Wallet', function() {
     assert.equal(w2.account[rec].getAddress('base58'), b58);
     assert.equal(w3.account[rec].getAddress('base58'), b58);
 
-    paddr = w1.getNested();
-
-    if (witness) {
-      assert(paddr);
-      assert.equal(w1.getNested('base58'), paddr.toBase58());
-      assert.equal(w2.getNested('base58'), paddr.toBase58());
-      assert.equal(w3.getNested('base58'), paddr.toBase58());
-    }
-
     // Add a shared unspent transaction to our wallets
     utx = new MTX();
     utx.addInput(dummy());
