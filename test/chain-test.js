@@ -368,7 +368,7 @@ describe('Chain', function() {
 
     assert.equal(chain.height, 631);
     assert(chain.state.hasCSV());
-    assert(chain.state.hasWitness());
+    assert(chain.state.hasExtension());
 
     cache = yield chain.db.getStateCache();
     assert.deepEqual(cache, chain.db.stateCache);

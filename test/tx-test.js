@@ -680,9 +680,9 @@ describe('TX', function() {
 
     ctx = sigopContext(input, witness, output);
 
-    assert.equal(ctx.spend.getSigopsCost(ctx.view, flags), 0);
-    assert.equal(ctx.fund.getSigopsCost(ctx.view, flags),
-      consensus.MAX_MULTISIG_PUBKEYS * consensus.WITNESS_SCALE_FACTOR);
+    assert.equal(ctx.spend.getSigops(ctx.view, flags), 0);
+    assert.equal(ctx.fund.getSigops(ctx.view, flags),
+      consensus.MAX_MULTISIG_PUBKEYS);
   });
 
   it('should count sigops for p2sh multisig', function() {
@@ -704,8 +704,7 @@ describe('TX', function() {
 
     ctx = sigopContext(input, witness, output);
 
-    assert.equal(ctx.spend.getSigopsCost(ctx.view, flags),
-      2 * consensus.WITNESS_SCALE_FACTOR);
+    assert.equal(ctx.spend.getSigops(ctx.view, flags), 2);
   });
 
   it('should count sigops for p2wpkh', function() {
@@ -724,15 +723,15 @@ describe('TX', function() {
 
     ctx = sigopContext(input, witness, output);
 
-    assert.equal(ctx.spend.getSigopsCost(ctx.view, flags), 1);
+    assert.equal(ctx.spend.getSigops(ctx.view, flags), 0);
     assert.equal(
-      ctx.spend.getSigopsCost(ctx.view, flags & ~Script.flags.VERIFY_WITNESS),
+      ctx.spend.getSigops(ctx.view, flags & ~Script.flags.VERIFY_WITNESS),
       0);
 
     output = Script.fromProgram(1, key.getKeyHash());
     ctx = sigopContext(input, witness, output);
 
-    assert.equal(ctx.spend.getSigopsCost(ctx.view, flags), 0);
+    assert.equal(ctx.spend.getSigops(ctx.view, flags), 0);
 
     output = Script.fromProgram(0, key.getKeyHash());
     ctx = sigopContext(input, witness, output);
@@ -741,29 +740,7 @@ describe('TX', function() {
     ctx.spend.inputs[0].prevout.index = 0xffffffff;
     ctx.spend.refresh();
 
-    assert.equal(ctx.spend.getSigopsCost(ctx.view, flags), 0);
-  });
-
-  it('should count sigops for nested p2wpkh', function() {
-    var flags = Script.flags.VERIFY_WITNESS | Script.flags.VERIFY_P2SH;
-    var key = KeyRing.generate();
-    var ctx, redeem, output, input, witness;
-
-    redeem = Script.fromProgram(0, key.getKeyHash());
-    output = Script.fromScripthash(redeem.hash160());
-
-    input = new Script([
-      redeem.toRaw()
-    ]);
-
-    witness = new Witness([
-      new Buffer([0]),
-      new Buffer([0])
-    ]);
-
-    ctx = sigopContext(input, witness, output);
-
-    assert.equal(ctx.spend.getSigopsCost(ctx.view, flags), 1);
+    assert.equal(ctx.spend.getSigops(ctx.view, flags), 0);
   });
 
   it('should count sigops for p2wsh', function() {
@@ -785,34 +762,9 @@ describe('TX', function() {
 
     ctx = sigopContext(input, witness, output);
 
-    assert.equal(ctx.spend.getSigopsCost(ctx.view, flags), 2);
+    assert.equal(ctx.spend.getSigops(ctx.view, flags), 0);
     assert.equal(
-      ctx.spend.getSigopsCost(ctx.view, flags & ~Script.flags.VERIFY_WITNESS),
+      ctx.spend.getSigops(ctx.view, flags & ~Script.flags.VERIFY_WITNESS),
       0);
-  });
-
-  it('should count sigops for nested p2wsh', function() {
-    var flags = Script.flags.VERIFY_WITNESS | Script.flags.VERIFY_P2SH;
-    var key = KeyRing.generate();
-    var pub = key.publicKey;
-    var ctx, wscript, redeem, output, input, witness;
-
-    wscript = Script.fromMultisig(1, 2, [pub, pub]);
-    redeem = Script.fromProgram(0, wscript.sha256());
-    output = Script.fromScripthash(redeem.hash160());
-
-    input = new Script([
-      redeem.toRaw()
-    ]);
-
-    witness = new Witness([
-      new Buffer([0]),
-      new Buffer([0]),
-      wscript.toRaw()
-    ]);
-
-    ctx = sigopContext(input, witness, output);
-
-    assert.equal(ctx.spend.getSigopsCost(ctx.view, flags), 2);
   });
 });
