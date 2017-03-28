@@ -222,14 +222,14 @@ describe('Block', function() {
       assert(tx.checkInputs(view, height));
       assert(tx.verify(view, flags));
       assert(!tx.hasWitness());
-      sigops += tx.getSigopsCost(view, flags);
+      sigops += tx.getSigops(view, flags);
       view.addTX(tx, height);
       reward += tx.getFee(view);
     }
 
     reward += consensus.getReward(height, 210000);
 
-    assert.equal(sigops, 5280);
+    assert.equal(sigops, 1320);
     assert.equal(reward, 2507773345);
     assert.equal(reward, block.txs[0].outputs[0].value);
   });
@@ -399,10 +399,10 @@ describe('Block', function() {
 
     for (i = 0; i < block.txs.length; i++) {
       tx = block.txs[i];
-      sigops += tx.getSigopsCost(view, flags);
+      sigops += tx.getSigops(view, flags);
     }
 
-    assert.equal(sigops, 23236);
+    assert.equal(sigops, 5809);
   });
 
   it('should count sigops for block 928927 (testnet)', function() {
@@ -417,10 +417,10 @@ describe('Block', function() {
 
     for (i = 0; i < block.txs.length; i++) {
       tx = block.txs[i];
-      sigops += tx.getSigopsCost(view, flags);
+      sigops += tx.getSigops(view, flags);
     }
 
-    assert.equal(sigops, 10015);
+    assert.equal(sigops, 9);
   });
 
   it('should count sigops for block 1087400 (testnet)', function() {
@@ -435,9 +435,9 @@ describe('Block', function() {
 
     for (i = 0; i < block.txs.length; i++) {
       tx = block.txs[i];
-      sigops += tx.getSigopsCost(view, flags);
+      sigops += tx.getSigops(view, flags);
     }
 
-    assert.equal(sigops, 1298);
+    assert.equal(sigops, 324);
   });
 });
