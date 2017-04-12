@@ -37,8 +37,7 @@ See the [Beginner's Guide][guide] for more in-depth installation instructions.
 
 ## Support
 
-Join us on freenode in the [#bcoin][irc] channel, or on the [bitcoin core
-slack][slack].
+Join us on freenode in the [#bcoin][irc] channel.
 
 ## Disclaimer
 
@@ -62,4 +61,3 @@ See LICENSE for more info.
 [purse]: https://purse.io
 [guide]: https://github.com/bcoin-org/bcoin/wiki/Beginner's-Guide
 [irc]: irc://irc.freenode.net/bcoin
-[slack]: https://slack.bitcoincore.org/
