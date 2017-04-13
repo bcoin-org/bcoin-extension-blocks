@@ -607,7 +607,7 @@ describe('Chain', function() {
     var mtx = new MTX();
     var job;
 
-    mtx.addTX(cb, 0);
+    mtx.addTX(cb, 0, chain.height - 2000, true);
     mtx.addOutput(wwallet.getAddress(), 1000);
 
     wwallet.sign(mtx);
@@ -617,6 +617,7 @@ describe('Chain', function() {
     job.refresh();
 
     block = yield job.mineAsync();
+    util.log(block);
 
     assert(yield chain.add(block));
   }));
