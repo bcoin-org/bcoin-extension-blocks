@@ -617,7 +617,6 @@ describe('Chain', function() {
     job.refresh();
 
     block = yield job.mineAsync();
-    util.log(block);
 
     assert(yield chain.add(block));
   }));
