@@ -203,6 +203,8 @@ describe('Block', function() {
       tx = block300025.txs[i];
       for (j = 0; j < tx.inputs.length; j++) {
         input = tx.inputs[j];
+        input.coin.extended = false;
+        input.coin.resolution = false;
         coin = Coin.fromJSON(input.coin);
         view.addCoin(coin);
       }
@@ -223,7 +225,7 @@ describe('Block', function() {
       assert(tx.verify(view, flags));
       assert(!tx.hasWitness());
       sigops += tx.getSigops(view, flags);
-      view.addTX(tx, height);
+      view.addTX(tx, height, false);
       reward += tx.getFee(view);
     }
 
