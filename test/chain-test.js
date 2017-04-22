@@ -809,6 +809,14 @@ describe('Chain', function() {
         cb.outputs.push(output);
       }
 
+      for (j = 0; j < 100; j++) {
+        output = new Output();
+        output.script = script.clone();
+        output.value = 0;
+
+        cb.outputs.push(output);
+      }
+
       block.refresh(true);
       block.merkleRoot = block.createMerkleRoot('hex');
 
@@ -818,8 +826,6 @@ describe('Chain', function() {
     assert.equal(chain.height, 4849);
   }));
 
-/*
-  // note: halvening is too much.
   it('should fail to connect too many sigops', co(function* () {
     var start = chain.height - 110;
     var end = chain.height - 100;
@@ -850,7 +856,7 @@ describe('Chain', function() {
         mtx.inputs[j - 2].script = new Script([script.toRaw()]);
       }
 
-      mtx.addOutput(wwallet.getAddress(), 1);
+      mtx.addOutput(wallet.getAddress(), 1);
 
       job.pushTX(mtx.toTX());
     }
@@ -859,7 +865,6 @@ describe('Chain', function() {
 
     assert.equal(yield mineBlock(job), 'bad-blk-sigops');
   }));
-*/
 
   it('should cleanup', co(function* () {
     yield miner.close();
