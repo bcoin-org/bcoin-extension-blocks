@@ -117,7 +117,7 @@ btcd = createGenesisBlock({
 extnet = createGenesisBlock({
   version: 1,
   ts: 1490103661,
-  bits: 505413631,
+  bits: 503447551,
   nonce: 8
 });
 
